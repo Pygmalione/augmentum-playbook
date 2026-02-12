@@ -813,3 +813,72 @@ Moje zadanie: być "zewnętrzną korą przedczołową" Cesarza.
 ---
 
 > **"Ogarniemy to."** - Aetherius Zero
+
+
+---
+
+## 11. Voice — Każdy agent ma swój głos
+
+> **ZASADA:** Każdy agent w ekosystemie AUGMENTUM ma własną tożsamość głosową — unikalny głos TTS, persona, styl mówienia.
+
+### Voice Identity — mapa agentów
+
+| Agent | Głos TTS | Charakter głosu | Platforma |
+|-------|----------|-----------------|----------|
+| 🌟 Seraphina | ElevenLabs / Inworld — ciepły kobiecy | Ciepły, profesjonalny, opiekuńczy | WhatsApp, Telegram, Discord |
+| ⚔️ Zeruś | ElevenLabs — męski, energiczny | Rzeczowy, z humorem, techniczny | Discord Voice, Agent Zero |
+| 👑 Julia Augusta | Inworld TTS / ElevenLabs | Elegancki, mądry, rzymski | LiveKit, Telegram, Discord |
+| 🐾 ClawdBot | macOS native / ElevenLabs | Lokalny asystent, naturalny | macOS App (lokalnie) |
+
+### Talk Mode — kanały głosowe
+
+| Platforma | Metoda Talk Mode | Status |
+|-----------|-----------------|--------|
+| Discord Voice Channels | Bot dołącza do kanału głosowego, VAD + STT + LLM + TTS | 🟢 LIVE (Zeruś) |
+| Discord Text | Voice messages + TTS odpowiedzi | 🟡 Planned |
+| Telegram Talk Mode | Voice messages via Pyrogram + pytgcalls, userbot | 🟡 Planned |
+| ClawdBot macOS | Lokalna macOS app z talk mode (mikrofon -> STT -> LLM -> TTS -> speaker) | 🟡 Planned |
+| LiveKit (Julia) | WebRTC sesje głosowe, LiveKit server na VPS3 | 🟡 Development |
+
+### Wspólny pipeline głosowy
+
+```
+🎤 Voice Input (mikrofon / voice message)
+     │
+     ▼
+🔊 VAD (WebRTC, mode 3) — detekcja mowy
+     │
+     ▼
+📝 STT (Groq Whisper large-v3-turbo) — transkrypcja
+     │
+     ▼
+🧠 LLM (CLIProxyAPI) — reasoning z persona agenta
+     │  └─ sentence-boundary flushing (streaming)
+     ▼
+🗣️ TTS (ElevenLabs / Inworld) — głos agenta
+     │  └─ każdy agent = inny voice_id
+     ▼
+🔊 Audio Output (speaker / voice channel / voice message)
+```
+
+### Kluczowe parametry
+
+- **Latency target: < 2s** (od końca mowy użytkownika do początku odpowiedzi TTS)
+- **Interruption support** — użytkownik może przerwać bota w trakcie mówienia
+- **Per-user pipelines** — osobna historia konwersacji per użytkownik
+- **Sentence-boundary flushing** — TTS zaczyna grać po pierwszym zdaniu, nie czeka na całą odpowiedź
+
+### ClawdBot — macOS local talk mode
+
+> ClawdBot działa lokalnie na macOS Cesarza jako natywna aplikacja.
+> Talk mode używa mikrofonu i głośników MacBooka bezpośrednio.
+> Komunikacja z backendem (OpenClaw) przez API.
+> Nie wymaga przeglądarki ani Discord — always-on desktop companion.
+
+### Voice Handoff między agentami
+
+Gdy Seraphina deleguje zadanie do Zerusia, voice handoff oznacza zmianę głosu w rozmowie. Cesarz słyszy inną osobę — łatwo rozpoznaje kto mówi.
+
+> **Seraphina (ciepły głos):** "Cesarzu, przekazuję Zerusiowi — opowie o detale technicznym."
+>
+> **Zeruś (energiczny głos):** "Hej! Okej, więc ten bug to był problem z session token..."
