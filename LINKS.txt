@@ -1,0 +1,14 @@
+AUGMENTUM PLAYBOOK - LINKI
+================================
+
+Repozytorium:
+https://github.com/Pygmalione/augmentum-playbook
+
+Glowny playbook:
+https://github.com/Pygmalione/augmentum-playbook/blob/main/AUGMENTUM-PLAYBOOK.md
+
+SOUL.md (persona Seraphiny):
+https://github.com/Pygmalione/augmentum-playbook/blob/main/SOUL.md
+
+Quickstart:
+https://github.com/Pygmalione/augmentum-playbook/blob/main/QUICKSTART.md
